@@ -11,7 +11,7 @@ class Users(Base):
     username=Column(String, unique=True)
     email=Column(String, unique=True)
     hashed_password=Column(String)
-    birth_date=Column(DateTime)
+    age=Column(Integer)
     budget=Column(Integer)
     gender=Column(String)
     nin=Column(Integer)
