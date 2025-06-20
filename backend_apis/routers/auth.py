@@ -9,13 +9,26 @@ from database import SessionLocal
 from models import Users
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from dotenv import load_dotenv
+import os
+from pathlib import Path
+
+
+env_path = Path(__file__).resolve().parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
 
 router = APIRouter(
     prefix='/auth',
     tags=['auth']
 )
 
-SECRET_KEY = 'a346e558928942d326ffeb3378d0f9f43708cc82f787e89a12ff7561c5b16f63'
+
+load_dotenv()  # Loads from .env into environment variables
+
+
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = 'HS256'
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
@@ -54,7 +67,7 @@ class CreateUserRequest(BaseModel):
     username:str = Field(min_length=3, max_length=15)
     email: str 
     password:str
-    birth_date:datetime
+    age:int
     budget:int
     gender:str
     nin:int
@@ -75,7 +88,7 @@ async def create_user(db: db_dependency,
         first_name =  create_user_request.first_name,
         last_name=  create_user_request.last_name,
         hashed_password = bcrypt_context.hash(create_user_request.password),
-        birth_date = create_user_request.birth_date,
+        age = create_user_request.age,
         budget= create_user_request.budget,
         gender= create_user_request.gender,
         nin= create_user_request.nin,
