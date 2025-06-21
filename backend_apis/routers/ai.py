@@ -10,6 +10,14 @@ from .auth import get_current_user
 from .insurelink_ai import insurance_recommendation, insurance_education
 from .products import response
 import json
+import os
+
+
+# Get the absolute path to this script's directory (e.g., backend_apis/routers)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Build the full path to data.json
+file_path = os.path.join(current_dir, "data.json")
 
 router = APIRouter(
     prefix= '/chat',
@@ -59,7 +67,7 @@ async def ai_personalised_products(user: user_dependency,
     "gender":user_model.gender,
     "type":"Give me a positive response from the insurance data sent to you."
 }
-    with open("data.json", "r") as f:
+    with open(file_path, "r") as f:
         insurance_data = json.load(f)
 
 # Convert to string
