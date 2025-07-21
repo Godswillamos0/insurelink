@@ -24,7 +24,7 @@ httpx==0.28.1
 idna==3.10
 jiter==0.10.0
 multidict==6.5.0
-openai==1.88.0
+groq
 propcache==0.3.2
 pydantic==2.11.7
 pydantic_core==2.33.2
