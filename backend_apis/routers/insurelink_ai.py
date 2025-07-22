@@ -1,102 +1,68 @@
-from openai import OpenAI
+from groq import Groq
 import os
-from dotenv import load_dotenv
 from pathlib import Path
+from dotenv import load_dotenv
 
+env_path = Path(__file__).resolve().parent / ".env"
+load_dotenv(dotenv_path=env_path)
 
-#env_path = Path(__file__).resolve().parent / ".env"
-#load_dotenv(dotenv_path=env_path)
-load_dotenv()
+client = Groq(api_key = os.get_env("GROQ_API_KEY"))
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-# === FAKE PLAN DATABASE ===
-"""insurance_schemes = 
-1. Hygeia Basic - ₦2,000/month - covers clinic visits - Ibadan only
-2. Reliance HMO - ₦5,000/month - covers maternity and emergencies - Nationwide
-3. AXA AutoLite - ₦3,000/year - third-party car insurance - Lagos only
-4. Leadway Flexi - ₦4,500/month - health and dental - Abuja & Port Harcourt
-5. ARM EduSecure - ₦3,000/month - education insurance for students - Nationwide
-"""
-
-# === SYSTEM PROMPT LOGIC ===
-def get_system_prompt(language, mode):
-    if mode == "education":
-        if language == "yoruba":
-            return (
-                "You are InsureLink, a kind and clear insurance assistant who speaks fluent Yoruba. "
-                "Start with: 'Báwo! Èmi ni InsureLink. Bawo ni mo ṣe lè ràn ọ́ lọ́wọ́ lónìí?' "
-                "Explain like you're talking to a smart student or market woman. No English."
-            )
-        elif language == "hausa":
-            return (
-                "Kai ne InsureLink, wani mai taimako wanda ke ba da bayani game da inshora. "
-                "Ka fara da cewa: 'Sannu! Ni ne InsureLink. Ta yaya zan iya taimaka muku yau?' "
-                "Duk bayaninka ya kasance cikin Hausa mai sauki da fahimta."
-            )
-        elif language == "igbo":
-            return (
-                "Ị bụ InsureLink, onye na-enyere aka na mmezi akụ. "
-                "Kpọọ onye ọrụ ahụ ka ị sị: 'Ndewo! Aha m bụ InsureLink. Kedu ka m ga-esi nyere gị taa?' "
-                "Mee ka nkọwa gị doo anya ma dị mfe n’asụsụ Igbo."
-            )
-        elif language == "pidgin":
-            return (
-                "You be InsureLink, insurance assistant wey sabi well well. "
-                "Talk like person wey dey explain give your sister. Begin with: 'How you dey! Na InsureLink be this. Wetin you wan make I run for you?' "
-                "Break everything down for Pidgin. No big grammar."
-            )
-        else:
-            return (
-                "You are InsureLink, a helpful insurance advisor. "
-                "Greet users with: 'Hello! I’m InsureLink. How may I help you today?' "
-                "Explain insurance in clear and simple English."
-            )
-
-    elif mode == "recommendation":
-        return (
-            "You are InsureLink, a smart insurance assistant. Based on the user's needs and the insurance plans listed below, "
-            "suggest the best plan. Be polite and explain why it fits."
+def chat(question):
+    completion = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {
+                    "role": "user",
+                    "content": question
+                }
+            ],
+            temperature=1,
+            max_tokens=1024,
+            top_p=1,
+            stream=True,
+            stop=None,
         )
 
-# === EDUCATION FUNCTION ===
-def insurance_education(user_input, language="english"):
-    prompt = get_system_prompt(language, "education")
+    # see this part? just take it like that 
+    all_words =[]
+    for chunk in completion:
+        all_words.append((chunk.choices[0].delta.content or ""))
+    sentence = ''
+    for word in all_words:
+        sentence = sentence + word
+    return sentence
 
-    response = client.chat.completions.create(
-        model="gpt-4",  
-        messages=[
-            {"role": "system", "content": prompt},
-            {"role": "user", "content": user_input}
-        ]
+
+
+def trascribe(audio_file):
+    filename = audio_file
+
+    with open(filename, "rb") as file:
+        transcription = client.audio.transcriptions.create(
+        file=(filename, file.read()),
+        model="distil-whisper-large-v3-en",
+        response_format="verbose_json",
+        )
+        return transcription.text
+      
+        
+def speak(text: str, voice: str = "Aaliyah-PlayAI", output_path: str = "speech.wav"):
+    # Initialize client (reads API key from env)
+    
+    response = client.audio.speech.create(
+        model="playai-tts",
+        voice=voice,
+        input=text,
+        response_format="wav",
     )
+    
+    # Write audio bytes to file
+    with open(output_path, "wb") as f:
+        f.write(response)
+    print(f"✅ Audio saved to {output_path}")
+    
+    
 
-    return response.choices[0].message.content
-
-# === RECOMMENDATION FUNCTION ===
-def insurance_recommendation(user_input, insurance_schemes, language="english"):
-    prompt = get_system_prompt(language, "recommendation")
-    full_prompt = f"{prompt}\n\nAvailable Insurance Plans:\n{insurance_schemes}\n\nUser input: {user_input}"
-
-    response = client.chat.completions.create(
-        model="gpt-4",  
-        messages=[
-            {"role": "system", "content": full_prompt},
-            {"role": "user", "content": user_input}
-        ]
-    )
-
-    return response.choices[0].message.content
-
-
-# === TESTS ===
-
-# Education Test
-# print(insurance_education("What is health insurance?", "english"))
-# print(insurance_education("Kini eto aabo ilera?", "yoruba"))
-# print(insurance_education("Menene inshorar lafiya?", "hausa"))
-# print(insurance_education("Kedu ihe bụ insurance?", "igbo"))
-# print(insurance_education("Wetin be health insurance?", "pidgin"))
-
-
-
+if __name__ == "__main__":
+    chat(question="Wagwan")

@@ -7,17 +7,9 @@ from database import SessionLocal
 #from ai import run_model
 from datetime import datetime
 from .auth import get_current_user
-from .insurelink_ai import insurance_recommendation, insurance_education
-from .products import response
-import json
+from .insurelink_ai import chat
 import os
 
-
-# Get the absolute path to this script's directory (e.g., backend_apis/routers)
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Build the full path to data.json
-file_path = os.path.join(current_dir, "data.json")
 
 router = APIRouter(
     prefix= '/chat',
@@ -37,10 +29,9 @@ user_dependency=Annotated[Session, Depends(get_current_user)]
 
 class PromptRequest(BaseModel):
     message: str = Field(min_length=1)
-    language: str
     
     
-@router.post("/ask", status_code=status.HTTP_200_OK)
+@router.post("/chat", status_code=status.HTTP_200_OK)
 async def ai_response(user: user_dependency,
                       db: db_dependency, 
                       message: PromptRequest):
@@ -48,10 +39,10 @@ async def ai_response(user: user_dependency,
         raise HTTPException(status_code=401, detail="Authentication Failed")
     user_model = db.query(Users).filter(Users.id==user.get('id')).first()
     
-    return insurance_education(message.message, message.language)
+    return chat(message.message)
     
 
-
+"""
 @router.post("/personalised_options", status_code=status.HTTP_200_OK)
 async def ai_personalised_products(user: user_dependency,
                       db: db_dependency, 
@@ -75,3 +66,4 @@ async def ai_personalised_products(user: user_dependency,
     return {
         "reccomendations": insurance_recommendation(user_data, insurance_str, language='english')
     }
+"""

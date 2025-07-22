@@ -8,21 +8,17 @@ class Users(Base):
     id=Column(Integer, primary_key=True, index=True)
     first_name=Column(String)
     last_name=Column(String)
-    username=Column(String, unique=True)
     email=Column(String, unique=True)
     hashed_password=Column(String)
-    age=Column(Integer)
-    budget=Column(Integer)
-    gender=Column(String)
-    nin=Column(Integer)
     phone=Column(String)
+    email_verified= Column(Boolean)
+    is_onboarded = Column(Boolean)
     
     
 class Insurance(Base):
     __tablename__='insurance'
     
     id=Column(Integer, primary_key=True, index=True)
-    company_name=Column(String)
     insurance_type=Column(String)
     insurance_policy= Column(String)
     
