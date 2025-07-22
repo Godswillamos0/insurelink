@@ -29,8 +29,8 @@ load_dotenv()  # Loads from .env into environment variables
 
 
 
-SECRET_KEY = os.get_env("SECRET_KEY")
-ALGORITHM = os.get_env("ALGORITHM")
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
@@ -66,8 +66,8 @@ db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[Session, Depends(get_current_user)]
 
 
-TERMII_API_KEY = os.get_env("TERMII_API_KEY")
-CONFIG_ID = os.get_env("CONFIG_ID")
+TERMII_API_KEY = os.getenv("TERMII_API_KEY")
+CONFIG_ID = os.getenv("CONFIG_ID")
 
 
 async def send_email_otp(email: str, code: str):
