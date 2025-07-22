@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 env_path = Path(__file__).resolve().parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
-client = Groq(api_key = os.get_env("GROQ_API_KEY"))
+client = Groq(api_key = os.getenv("GROQ_API_KEY"))
 
 def chat(question):
     completion = client.chat.completions.create(
