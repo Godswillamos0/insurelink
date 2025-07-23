@@ -1,8 +1,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from dotenv import load_dotenv
+from pathlib import Path
+import os
 
-SQLALCHEMY_DATABASE_URL = 'postgresql://insurelink_user:BNoIrADzZ6vOC8FKrYEPeokE4mfiQjY6@dpg-d20513emcj7s73ao6p00-a.oregon-postgres.render.com/insurelink'
+env_path = Path(__file__).resolve().parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
+SQLALCHEMY_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URL") 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
