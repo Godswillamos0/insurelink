@@ -8,7 +8,7 @@ bcrypt
 passlib
 requests
 pydantic[email]
-
+psycopg2-binary
 aiohttp==3.12.13
 aiosignal==1.3.2
 annotated-types==0.7.0
