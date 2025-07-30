@@ -62,7 +62,7 @@ async def edit_account_details(db: db_dependency,
     user_model.first_name = new_details.first_name
     user_model.last_name = new_details.last_name
     user_model.phone = new_details.phone
-    user_model.budget = new_details.budget
+
     
     db.add(user_model)
     db.commit()

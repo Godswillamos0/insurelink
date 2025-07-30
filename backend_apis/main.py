@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from routers import customer_service, auth, admin, users, insurance
+from typing import Annotated
 import models
-from routers import auth, admin, users, ai, insurance
+from routers import auth, admin, users, insurance
 from database import engine
 
 app = FastAPI()
@@ -22,7 +24,7 @@ app.include_router(admin.router)
 app.include_router(auth.router)
 app.include_router(insurance.router)
 app.include_router(users.router)
-app.include_router(ai.router)
+app.include_router(customer_service.router)
 
 
 @app.get("/ping")

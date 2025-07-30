@@ -15,21 +15,40 @@ class Users(Base):
     is_onboarded = Column(Boolean)
     
     
-class Insurance(Base):
+class InsuranceProduct(Base):
     __tablename__='insurance'
     
     id=Column(Integer, primary_key=True, index=True)
+<<<<<<< HEAD
+    owner_id=Column(Integer, ForeignKey("users.id"))
+    start_time=Column(String)
+    end_time=Column(String)
+    amount=Column(Integer)
+    insurance_type=Column(String) # e.g., "monthly", "weekly"
+=======
     insurance_type=Column(String)
     insurance_policy= Column(String)
+>>>>>>> 7ecf3efc9f28548cbb7482df0834d54f9974401f
     
     
-class Datas(Base):
+class Claims(Base):
     __tablename__='datas'
     
     id=Column(Integer, primary_key=True, index=True)
     owner_id=Column(Integer, ForeignKey("users.id"))
     insurance_id=Column(Integer, ForeignKey("insurance.id"))
-    time_stamp=Column(DateTime)
-    exp_time=Column(DateTime)
-    paid=Column(Boolean)
+    document_submitted=Column(Boolean)
+    document_verified=Column(Boolean)
+
+
+class Premium(Base):
+    __tablename__='premium'
+    
+    id=Column(Integer, primary_key=True, index=True)
+    owner_id=Column(Integer, ForeignKey("users.id"))
+    insurance_id=Column(Integer, ForeignKey("insurance.id"))
+    amount=Column(Integer, ForeignKey("insurance.amount"))
+    due_date=Column(DateTime)
+    paid_date=Column(DateTime)
+    is_paid=Column(Boolean)
     
