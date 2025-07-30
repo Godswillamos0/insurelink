@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 fastapi==0.115.5
 uvicorn
 sqlalchemy
@@ -38,9 +36,6 @@ typing-inspection==0.4.1
 typing_extensions==4.14.0
 urllib3==2.4.0
 yarl==1.20.1
-
-=======
-
 fastapi==0.115.5
 uvicorn
 sqlalchemy
@@ -79,5 +74,3 @@ typing-inspection==0.4.1
 typing_extensions==4.14.0
 urllib3==2.4.0
 yarl==1.20.1
-
->>>>>>> 7ecf3efc9f28548cbb7482df0834d54f9974401f
