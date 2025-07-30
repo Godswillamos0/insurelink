@@ -35,7 +35,7 @@ async def get_all_product(db: db_dependency, user:user_dependency):
     
     return extract_important_insurance_details()
 '''
-<<<<<<< HEAD
+
 
 class Insurance(BaseModel):
     insurance_type: str = Field(min_length=1, max_length=50)
@@ -163,8 +163,7 @@ async def file_claim(db: db_dependency, user: user_dependency, insurance_id: int
     db.commit()
     
     return {"message": "Claim filed successfully", "claim_id": claim_model.id}
-=======
->>>>>>> 7ecf3efc9f28548cbb7482df0834d54f9974401f
+
     
 
 @router.get('/pay', status_code=status.HTTP_200_OK)
