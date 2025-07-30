@@ -19,16 +19,16 @@ class InsuranceProduct(Base):
     __tablename__='insurance'
     
     id=Column(Integer, primary_key=True, index=True)
-<<<<<<< HEAD
+
     owner_id=Column(Integer, ForeignKey("users.id"))
     start_time=Column(String)
     end_time=Column(String)
     amount=Column(Integer)
     insurance_type=Column(String) # e.g., "monthly", "weekly"
-=======
+
     insurance_type=Column(String)
     insurance_policy= Column(String)
->>>>>>> 7ecf3efc9f28548cbb7482df0834d54f9974401f
+
     
     
 class Claims(Base):
