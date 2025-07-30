@@ -1,4 +1,4 @@
-<<<<<<< HEAD:backend_apis/routers/customer_service.py
+
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
