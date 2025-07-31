@@ -28,7 +28,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     async with httpx.AsyncClient() as client:
         try:
             response = await client.post(
-                "https://your-app-name.onrender.com/chat/tel_bot",
+                "https://insurelink.onrender.com/chat/tel_bot",
                 json={"message": user_text}
             )
             data = response.json()
