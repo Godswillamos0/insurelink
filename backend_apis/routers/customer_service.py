@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, HTTPException, status, WebSocket, WebSoc
 from fastapi.responses import HTMLResponse
 import io
 import os
-import openai
 from pathlib import Path
 from pydub import AudioSegment
 import asyncio
