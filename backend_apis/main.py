@@ -34,9 +34,11 @@ app.include_router(customer_service.router)
 @app.post("/webhook")
 async def telegram_webhook(request: Request):
     data = await request.json()
+    
+    print("📨 Received from Telegram:", data)  # Add this
     await telegram_app.update_queue.put(data)
     return {"ok": True}
-
+    
 
 
 @app.on_event("startup")
