@@ -34,7 +34,6 @@ def chat(question):
     return sentence
 
 
-
 def trascribe(audio_file):
     filename = audio_file
 
@@ -61,7 +60,6 @@ def speak(text: str, voice: str = "Aaliyah-PlayAI", output_path: str = "speech.w
     with open(output_path, "wb") as f:
         f.write(response)
     print(f"✅ Audio saved to {output_path}")
-    
     
 
 if __name__ == "__main__":

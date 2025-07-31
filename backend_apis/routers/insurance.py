@@ -163,7 +163,6 @@ async def file_claim(db: db_dependency, user: user_dependency, insurance_id: int
     db.commit()
     
     return {"message": "Claim filed successfully", "claim_id": claim_model.id}
-
     
 
 @router.get('/pay', status_code=status.HTTP_200_OK)
