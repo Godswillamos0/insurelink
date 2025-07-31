@@ -75,4 +75,3 @@ typing_extensions==4.14.0
 urllib3==2.4.0
 yarl==1.20.1
 python-telegram-bot
-pydub
