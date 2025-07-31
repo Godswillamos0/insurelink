@@ -28,14 +28,16 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     async with httpx.AsyncClient() as client:
         try:
             response = await client.post(
-                "https://insurelink.onrender.com/tel_bot/chat",  # or internal API
+                "https://your-app-name.onrender.com/chat/tel_bot",
                 json={"message": user_text}
             )
-            reply = response.json().get("response", clean_text(chat(user_text)))
+            data = response.json()
+            reply = data.get("response") or "⚠️ No reply from server."
         except Exception as e:
-            reply = f"Error: {str(e)}"
+            reply = f"❌ Error: {str(e)}"
 
     await update.message.reply_text(reply)
+
 
 
 # Register handler
