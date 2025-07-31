@@ -1,7 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from routers import customer_service, auth, admin, users, insurance
-from routers.telegram_bot import start_telegram_bot
+from routers.telegram_bot import telegram_app, configure_webhook
 from typing import Annotated
 import models
 from routers import auth, admin, users, insurance
@@ -30,16 +30,23 @@ app.include_router(users.router)
 app.include_router(customer_service.router)
 
 
+
+@app.post("/webhook")
+async def telegram_webhook(request: Request):
+    data = await request.json()
+    await telegram_app.update_queue.put(data)
+    return {"ok": True}
+
+
+
 @app.on_event("startup")
 async def startup_event():
-    asyncio.create_task(start_telegram_bot())
-
+    await configure_webhook()
 
 
 @app.get("/ping")
 async def ping():
     return {"status": "alive"}
-
 
 if __name__ == "__main__":
     import uvicorn
