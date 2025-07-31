@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse
 import io
 import os
 from pathlib import Path
-
+from pydub import AudioSegment
 import asyncio
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
@@ -45,7 +45,7 @@ class PromptRequest(BaseModel):
     message: str = Field(min_length=1)
     
     
-@router.post("/chat", status_code=status.HTTP_200_OK)
+@router.post("/app", status_code=status.HTTP_200_OK)
 async def ai_response(user: user_dependency,
                       db: db_dependency, 
                       message: PromptRequest):
@@ -54,5 +54,9 @@ async def ai_response(user: user_dependency,
     user_model = db.query(Users).filter(Users.id==user.get('id')).first()
     
     return chat(message.message)
-    
 
+
+@router.post("/tel_bot", status_code=status.HTTP_200_OK)
+async def tel_bot_chat(request: PromptRequest):
+    result = chat(request.message)
+    return {"response": result}
