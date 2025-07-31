@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse
 import io
 import os
 from pathlib import Path
-from pydub import AudioSegment
+
 import asyncio
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
