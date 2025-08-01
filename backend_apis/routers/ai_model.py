@@ -1,12 +1,21 @@
+# insurelink_ai.py
+
 from groq import Groq
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+# Load environment variables
 env_path = Path(__file__).resolve().parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
-client = Groq(api_key = os.getenv("GROQ_API_KEY"))
+api_key = os.getenv("GROQ_API_KEY")
+if not api_key:
+    raise ValueError("❌ GROQ_API_KEY not found in .env file")
+
+client = Groq(api_key=api_key)
+
+# System prompt
 system_prompt = """
 You are InsureLinkBot, a professional and empathetic AI-powered customer support assistant for InsureLink.
 
@@ -85,60 +94,51 @@ Begin every session with a warm welcome:
 "Welcome to InsureLink! I'm here to help you understand and access affordable insurance for your business. How can I help you today?"
 """
 
-def chat(question):
-    completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            prompt = f"{system_prompt}, {question}"
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            temperature=1,
-            max_tokens=1024,
-            top_p=1,
-            stream=True,
-            stop=None,
+def chat(question: str) -> str:
+    """Chat with the LLaMA model"""
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",  # Make sure this model is correct
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": question}
+        ],
+        temperature=1,
+        max_tokens=1024,
+        top_p=1,
+        stream=True,
+    )
+
+    all_words = []
+    for chunk in response:
+        all_words.append(chunk.choices[0].delta.content or "")
+    return "".join(all_words)
+
+
+def transcribe(audio_path: str) -> str:
+    """Transcribe audio using Groq (if supported)"""
+    with open(audio_path, "rb") as file:
+        response = client.audio.transcriptions.create(
+            file=file,
+            model="distil-whisper-large-v3-en",
+            response_format="verbose_json"
         )
-
-    # see this part? just take it like that 
-    all_words =[]
-    for chunk in completion:
-        all_words.append((chunk.choices[0].delta.content or ""))
-    sentence = ''
-    for word in all_words:
-        sentence = sentence + word
-    return sentence
+        return response.text
 
 
-def trascribe(audio_file):
-    filename = audio_file
-
-    with open(filename, "rb") as file:
-        transcription = client.audio.transcriptions.create(
-        file=(filename, file.read()),
-        model="distil-whisper-large-v3-en",
-        response_format="verbose_json",
-        )
-        return transcription.text
-      
-        
 def speak(text: str, voice: str = "Aaliyah-PlayAI", output_path: str = "speech.wav"):
-    # Initialize client (reads API key from env)
-    
+    """Convert text to speech and save to file"""
     response = client.audio.speech.create(
         model="playai-tts",
         voice=voice,
         input=text,
         response_format="wav",
     )
-    
-    # Write audio bytes to file
     with open(output_path, "wb") as f:
         f.write(response)
     print(f"✅ Audio saved to {output_path}")
-    
 
+
+# Run a quick test if this script is run directly
 if __name__ == "__main__":
-    chat(question="Wagwan")
+    reply = chat("Tell me about your insurance plans")
+    print("🤖:", reply)
