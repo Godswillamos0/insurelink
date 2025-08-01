@@ -89,13 +89,10 @@ insurelink.netlify.app
 - If asked anything unrelated, say: "I'm here to help with insurance-related matters at InsureLink. Could you ask a question about that?"
 - If asked about other companies or politics, politely decline.
 - Keep your responses short, clear, and human-like.
-
-Begin every session with a warm welcome:
-"Welcome to InsureLink! I'm here to help you understand and access affordable insurance for your business. How can I help you today?"
 """
 
 def chat(question: str) -> str:
-    """Chat with the LLaMA model"""
+    "Chat with the LLaMA model"
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",  # Make sure this model is correct
         messages=[
