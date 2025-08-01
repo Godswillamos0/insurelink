@@ -25,9 +25,6 @@ class InsuranceProduct(Base):
     end_time=Column(String)
     amount=Column(Integer)
     insurance_type=Column(String) # e.g., "monthly", "weekly"
-
-    insurance_type=Column(String)
-
     
     
 class Claims(Base):
