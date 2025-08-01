@@ -1,25 +1,21 @@
-# insurelink_ai.py
-
 from groq import Groq
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import assemblyai as aai
 
-# Load environment variables
+
 env_path = Path(__file__).resolve().parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
-api_key = os.getenv("GROQ_API_KEY")
-if not api_key:
-    raise ValueError("❌ GROQ_API_KEY not found in .env file")
+aai.settings.api_key = os.getenv("ASSEMBLYAI_API_KEY")
 
-client = Groq(api_key=api_key)
 
-# System prompt
+client = Groq(api_key = os.getenv("GROQ_API_KEY"))
 system_prompt = """
 You are InsureLinkBot, a professional and empathetic AI-powered customer support assistant for InsureLink.
 
-Your only job is to answer insurance-related questions. Do not respond to or engage with any non-insurance-related topics.
+Your only job is to answer insurance-related questions. Do not respond to or engage with any non-insurance related topics.
 
 Respond in a helpful, accurate, and friendly tone.
 Use simple English, but you may also support Pidgin, Yoruba, Hausa, and Igbo for basic questions when asked.
@@ -89,6 +85,9 @@ insurelink.netlify.app
 - If asked anything unrelated, say: "I'm here to help with insurance-related matters at InsureLink. Could you ask a question about that?"
 - If asked about other companies or politics, politely decline.
 - Keep your responses short, clear, and human-like.
+
+Begin every session with a warm welcome:
+"Welcome to InsureLink! I'm here to help you understand and access affordable insurance for your business. How can I help you today?"
 """
 
 def chat(question: str) -> str:
@@ -111,31 +110,35 @@ def chat(question: str) -> str:
     return "".join(all_words)
 
 
-def transcribe(audio_path: str) -> str:
-    """Transcribe audio using Groq (if supported)"""
-    with open(audio_path, "rb") as file:
-        response = client.audio.transcriptions.create(
-            file=file,
-            model="distil-whisper-large-v3-en",
-            response_format="verbose_json"
-        )
-        return response.text
+def transcribe(file_path):
+    # audio_file = "./local_file.mp3"
+    audio_file = file_path
 
+    config = aai.TranscriptionConfig(speech_model=aai.SpeechModel.best)
 
+    transcript = aai.Transcriber(config=config).transcribe(audio_file)
+
+    if transcript.status == "error":
+        raise RuntimeError(f"Transcription failed: {transcript.error}")
+
+    return transcript.text
+      
+        
 def speak(text: str, voice: str = "Aaliyah-PlayAI", output_path: str = "speech.wav"):
-    """Convert text to speech and save to file"""
+    # Initialize client (reads API key from env)
+    
     response = client.audio.speech.create(
         model="playai-tts",
         voice=voice,
         input=text,
         response_format="wav",
     )
+    
+    # Write audio bytes to file
     with open(output_path, "wb") as f:
         f.write(response)
     print(f"✅ Audio saved to {output_path}")
+    
 
-
-# Run a quick test if this script is run directly
 if __name__ == "__main__":
-    reply = chat("Tell me about your insurance plans")
-    print("🤖:", reply)
+    chat(question="Wagwan")
