@@ -27,7 +27,6 @@ class InsuranceProduct(Base):
     insurance_type=Column(String) # e.g., "monthly", "weekly"
 
     insurance_type=Column(String)
-    insurance_policy= Column(String)
 
     
     
