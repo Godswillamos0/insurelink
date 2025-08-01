@@ -139,7 +139,7 @@ async def get_claims(db: db_dependency, user: user_dependency):
     return claims
 
 
-@router.post('/claim', status_code=status.HTTP_201_CREATED)
+@router.post('/claim/{insurance_id}', status_code=status.HTTP_201_CREATED)
 async def file_claim(db: db_dependency, user: user_dependency, insurance_id: int):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication Failed")
