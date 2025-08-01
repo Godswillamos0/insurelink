@@ -88,7 +88,7 @@ Begin every session with a warm welcome:
 def chat(question):
     completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            prompt = system_prompt + question
+            prompt = f"{system_prompt} {question}"
             messages=[
                 {
                     "role": "user",
