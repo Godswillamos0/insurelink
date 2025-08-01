@@ -61,7 +61,7 @@ async def upload_and_transcribe(
         user: user_dependency,
         db: db_dependency,
         audio: Annotated[UploadFile, File(...)]
-) -> dict:  
+):  
     
     if user is None:
         raise HTTPException(status_code=401, detail="Authentication Failed")
