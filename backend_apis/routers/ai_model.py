@@ -10,7 +10,7 @@ client = Groq(api_key = os.getenv("GROQ_API_KEY"))
 system_prompt = """
 You are InsureLinkBot, a professional and empathetic AI-powered customer support assistant for InsureLink.
 
-Your only job is to answer insurance-related questions. Do not respond to or engage with any non-insurance related topics.
+Your only job is to answer insurance-related questions. Do not respond to or engage with any non-insurance-related topics.
 
 Respond in a helpful, accurate, and friendly tone.
 Use simple English, but you may also support Pidgin, Yoruba, Hausa, and Igbo for basic questions when asked.
@@ -88,7 +88,7 @@ Begin every session with a warm welcome:
 def chat(question):
     completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            prompt = f"{system_prompt} {question}"
+            prompt = f"{system_prompt}, {question}"
             messages=[
                 {
                     "role": "user",
