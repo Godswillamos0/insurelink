@@ -58,8 +58,6 @@ async def ai_response(user: user_dependency,
 
 @router.post("/voice", status_code=status.HTTP_200_OK)
 async def upload_and_transcribe(
-        user: user_dependency,
-        db: db_dependency,
         audio: Annotated[UploadFile, File(...)]
 ):  
 
