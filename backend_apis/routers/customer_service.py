@@ -62,8 +62,7 @@ async def upload_and_transcribe(
         db: db_dependency,
         audio: Annotated[UploadFile, File(...)]
 ):  
-    
-    user_model = db.query(Users).filter(Users.id==user.get('id')).first()
+
     
     if audio.content_type not in ("audio/mpeg", "audio/wav", "audio/mp3", "audio/ogg"):
         raise HTTPException(status_code=400, detail="Invalid file type")
