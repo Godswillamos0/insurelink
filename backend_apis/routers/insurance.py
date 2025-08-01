@@ -134,7 +134,7 @@ async def get_claims(db: db_dependency, user: user_dependency):
     
     claims = db.query(Claims).filter(Claims.owner_id == user.get('id')).all()
     if not claims:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No claims found for this user")
+        return "0"
     
     return claims
 
